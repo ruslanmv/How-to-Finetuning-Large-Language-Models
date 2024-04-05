@@ -1,2 +1,5 @@
-
-backup/requirements.txt
+.venv/
+backup/
+.env
+__pycache__/
+2-Training/lamini_docs_3_steps/*
