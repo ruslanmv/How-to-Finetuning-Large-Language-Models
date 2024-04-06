@@ -1,137 +1,131 @@
-# How to Finetunning Large Language Models
+# How to Fine-tune Large Language Models
 
-Hello everyone, today we are going getting started with Finetunning Large Language Models in the Cloud.
-
+Hello everyone, today we are going to get started with Fine-tuning Large Language Models (LLMs) locally and in the cloud.
 
 ## Introduction
+Currently, there are two common methods to customize our LLMs.
 
-Currenttly there are two common different methods to to custom our LLMS.
-## Prompting
-Generic , side projects prototypes
+### Prompting
+- Generic, side project prototypes
+  - Pros: No data required to get started, smaller upfront cost, no technical knowledge needed, connect data through retrieval (RAG)
+  - Cons: Much less data fits, forgets data, hallucinations, RAG misses or gets incorrect data
 
-Pros
-- No data to get started
-- Smaller upfront cost
-- No techniical knowledge neeeded
-- Connect data through retrieval (RAG)
+### Fine-tuning
+- Domain-specific, enterprise, production usage, privacy
+  - Pros: Nearly unlimited data fits, learn new information, correct incorrect information, less cost if smaller model, use RAG too, reduce hallucinations
+  - Cons: Need high quality data, upfront compute cost, needs technical knowledge for the data
 
-Cons
-- Much less data fits
-- Forgets data
-- Hallucinations
-- RAG misses or gets incorrect data
-
-## Finetunning
-
-
-Domain specific, enterprise, production usage, privacy.
-
-Pros
-- Nearly unlimited data fits
-- Learn new information
-- Correct incorrect information
-- Less cost if smaller model
-- Use RAG too
-- Reduce Hallucitnations
-
-Cos
-- Need high quality data
-- Upfront compute cost
-- Needs technical knowledge for the data.
-
-
-Fine tunning usually refers to traineing furter, can also be self-supervissed unlabeled data, can labeled data you curated, much less data needed.
-Fine tunning for generative task is not weell defined. Updates entire model, non gust part of it.
+Fine-tuning usually refers to training further. It can be done with self-supervised unlabeled data or labeled data that you curated. It requires much less data compared to fine-tuning for generative tasks, which is not well defined. Fine-tuning updates the entire model, not just a part of it.
 
 
 ## Environment Setup
 
-
-
 ## Local Setup
-First we are going to install our enviroment with python 3.10.11 here , after you installed in your working directory you can create your enviroment
+First, we are going to install our environment with Python 3.10.11. After you have installed Python in your working directory, you can create your virtual environment using the following command:
 
 ```
 python -m venv .venv
 
 ```
-You’ll notice a new directory in your current working directory with the same name as your virtual environment, then activate the virtual environment.
-
+You'll notice a new directory in your current working directory with the same name as your virtual environment. Then, activate the virtual environment:
 ```
 .venv\Scripts\activate.bat
 
 ```
 
-usually is convinent having the latest pip
+It is convenient to have the latest pip installed:
 
 ```
 python -m pip install --upgrade pip
 
 ```
-then we install our notebook, because also you can use Jupyter Notebook
+Next, we install Jupyter Notebook, as you can also use it:
+
 
 ```
 pip install ipykernel notebook
 ```
 
 
-## Step 3 . Setup libraries
-Once we have our running environment we install our kernel
+### Step 3: Setup libraries
+Once we have our running environment, we install our kernel:
+
 
 
 ```
 python -m ipykernel install --user --name LLM --display-name "Python (LLM)"
 ```
 
-then we will require Pytorch, HuggingFace and Llama libraries.
+Then, we will require PyTorch, HuggingFace, and Llama libraries:
 
 
 ```
-pip install datasets==2.14.6 transformers==4.31.0 torch torchvision  lamini==2.0.1 ipywidgets python-dotenv
+pip install datasets==2.14.6 transformers==4.31.0 torch torchvision  lamini==2.0.1 ipywidgets python-dotenv sacrebleu sqlitedict omegaconf pycountry rouge_score peft pytablewriter
 ```
 
-If we are in windows we can use
+If we are on Windows, we can use the following command:
 ```
 pip install transformers[torch] 
 ```
-or in linux
+If we are on Linux, we can use the following command:
 ```
 pip install accelerate -U
 ```
 
-## First time fine tunning
-
-We identify the tasks by bompt engineering of a large LLM.
-
-Find tasks that you see an LLM doing OK at.
-
-Pick one task.
-
-Get near 1000 inputs and out puts for the task
-Finetune a small LLM on this data.
+## First-time Fine-tuning
+To start fine-tuning, we need to identify the tasks by bottom-up engineering of a large LLM. Find tasks that the LLM is doing okay at. Pick one task and gather around 1000 inputs and outputs for that task. Then, fine-tune a small LLM on this data.
 
 
-# What is Instruction tunning
+# What is Instruction Tuning?
+Instruction tuning teaches the model to behave more like a chatbot, providing a better user interface for model generation. For example, it turned GPT-3 into ChatGPT, increasing AI adoption from thousands of researchers to millions of people. You can use instruction-following datasets, such as FAWS, customer support conversations, slack messages, etc. If you don't have QA data, you can convert it to QA by using a prompt template or another LLM. The standard cycle of fine-tuning consists of Data Preparation, Training, and Evaluation.
+
+## Training
+Training an LLM is similar to training a neural network. The process involves:
+- Adding the training data
+- Calculating loss
+- Backpropagating through the model
+- Updating weights
+- Hyperparameters (Learning Rate, Learning Rate Scheduler)
+  
+## Evaluation
+There are several ways to evaluate the results of training, but it requires having good test data that is of high quality, accurate, and generalized, not seen in the training data. Currently, there is an Elo comparison. LLM benchmarks like ARC (a set of grade-school questions) and HellaSwag - MMLU (multitask metrics covering elementary math, US history, computer science, law, and more) can be used. TrufulQA is another benchmark.
+
+## Error Analysis
+Error analysis involves understanding the behavior of the base model before fine-tuning. Categorize errors and iterate on data to fix these problems in the data space.
+
+## Training Infrastructure
+For real training, we need to consider the amount of parameters required to train. Here is a table showing the AWS Instance, GPU, GPU Memory, Max Inference size (#params), and Max training size (#tokens):
+
+AWS Instance | GPU |GPU Memory|Max Inference size (#params)| Max training size (#tokens)
+
+| AWS Instance   | GPU     | GPU Memory | Max Inference size (#params) | Max training size (#tokens) |
+|----------------|---------|------------|-----------------------------|-----------------------------|
+| p3.2xlarge     | 1 V100  | 16GB       | 7B                          | 1B                          |
+| p3.8xlarge     | 4 V100  | 64GB       | 7B                          | 1B                          |
+| p3.16xlarge    | 8 V100  | 128GB      | 7B                          | 1B                          |
+| p3dn.24xlarge  | 8 V100  | 256GB      | 14B                         | 2B                          |
+| p4d.24xlarge   | 8 A100  | 320GB      | 18B                         | 2.5B                        |
+| p4de.24xlarge  | 8 A100  | 640GB      | 32B                         | 5B                          |
 
 The instruction tuned, teaches the model to behave more like a chatbot, better user interface for model generation. For example, turned GPT-3 into ChatGPT, increase AI adoption, from thousandss of reseachers to millions of people.
 
-You can use Instruction-following datasets, by using FAWS, customer support conversations, slack messages etc.
 
-If you dont have QA data you can convert to QA by using a prompt template or using another llm.
+## PEFT  Parameter-Efficient Finetuning
+PEFT stands for Parameter-Efficient Fine-tuning. It refers to the process of fine-tuning LLMs with fewer trainable parameters, resulting in reduced GPU memory usage and slightly lower accuracy compared to fine-tuning all parameters. PEFT involves training new weights in some layers and freezing main weights. It uses low-rank decomposition matrices of the original weights to make changes. During inference, it merges the new weights with the main weights.
 
-The standard cycle of Finetineing is Data Preparation, Traniing and Evaluation
+## LORA  Low Rank Adaptiaion of LLMs
+LORA is another approach for adapting LLMs to new, different tasks. It also involves training new weights in some layers and freezing main weights. LORA uses LoRa for adaptation to new tasks.
 
+## Why Fine-tune All the Parameters?
+- LORA (Low Rank Adaptation of LLMs)
+  - Fewer trainable parameters for GPT3 (1000x less)
+  - Less GPU memory usage
+  - Slightly lower accuracy compared to fine-tuning
+  - Same inference latency
+  - Train new weights in some layers and freeze main weights
+  - New weights are rank decomposition matrices of original weights
+  - Merge with main weights during inference
 
-# Training 
+## Conclusion
 
-What is training model in LLM
-
-The process to train LLMS is the same as a neural network. 
-- First you need to add the training data
-- Calculate loss
-- Backprop trhough model
-- Update weights
-  
-  Hyperparaters
-- Learning Rate
-- Learner rate schedular
+In this blog post, we have discussed how to fine-tune large language models. We have covered the different methods of customization, environment setup, instruction tuning, training, evaluation, error analysis, training infrastructure, PEFT, LORA, and the importance of fine-tuning all parameters. Fine-tuning large language models can greatly benefit enterprises in improving their language models and achieving better results in various tasks.
