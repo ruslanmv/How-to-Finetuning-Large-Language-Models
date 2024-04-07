@@ -3,4 +3,4 @@ backup/
 .env
 __pycache__/
 2_Training/lamini_docs_3_steps/*
-ai_medical_3_steps/*
+ai_medical_*/*
