@@ -7,3 +7,4 @@ ai_medical_*/*
 results/
 .vscode/settings.json
 best_fit/
+save.ipynb
