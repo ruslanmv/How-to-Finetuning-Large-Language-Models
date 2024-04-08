@@ -4,3 +4,5 @@ backup/
 __pycache__/
 2_Training/lamini_docs_3_steps/*
 ai_medical_*/*
+results/
+.vscode/settings.json
