@@ -1,6 +1,6 @@
 # How to Fine-tune Large Language Models
 
-Hello everyone, today we are going to get started with Fine-tuning Large Language Models (LLMs) locally and in the cloud.
+Hello everyone, today we are going to get started with Fine-tuning Large Language Models (LLMs) locally and can be used in the cloud.
 
 ## Introduction
 Currently, there are two common methods to customize our LLMs.
