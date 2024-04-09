@@ -72,6 +72,11 @@ If we are on Linux, we can use the following command:
 pip install accelerate -U
 ```
 
+
+## Data Preparation
+
+
+
 ## First-time Fine-tuning
 To start fine-tuning, we need to identify the tasks by bottom-up engineering of a large LLM. Find tasks that the LLM is doing okay at. Pick one task and gather around 1000 inputs and outputs for that task. Then, fine-tune a small LLM on this data.
 
@@ -79,19 +84,18 @@ To start fine-tuning, we need to identify the tasks by bottom-up engineering of 
 # What is Instruction Tuning?
 Instruction tuning teaches the model to behave more like a chatbot, providing a better user interface for model generation. For example, it turned GPT-3 into ChatGPT, increasing AI adoption from thousands of researchers to millions of people. You can use instruction-following datasets, such as FAWS, customer support conversations, slack messages, etc. If you don't have QA data, you can convert it to QA by using a prompt template or another LLM. The standard cycle of fine-tuning consists of Data Preparation, Training, and Evaluation.
 
+
+[For more information ](./1_Data_Preparation/README.md)
+
+
 ## Training
+
 Training an LLM is similar to training a neural network. The process involves:
 - Adding the training data
 - Calculating loss
 - Backpropagating through the model
 - Updating weights
 - Hyperparameters (Learning Rate, Learning Rate Scheduler)
-  
-## Evaluation
-There are several ways to evaluate the results of training, but it requires having good test data that is of high quality, accurate, and generalized, not seen in the training data. Currently, there is an Elo comparison. LLM benchmarks like ARC (a set of grade-school questions) and HellaSwag - MMLU (multitask metrics covering elementary math, US history, computer science, law, and more) can be used. TrufulQA is another benchmark.
-
-## Error Analysis
-Error analysis involves understanding the behavior of the base model before fine-tuning. Categorize errors and iterate on data to fix these problems in the data space.
 
 ## Training Infrastructure
 For real training, we need to consider the amount of parameters required to train. Here is a table showing the AWS Instance, GPU, GPU Memory, Max Inference size (#params), and Max training size (#tokens):
@@ -108,6 +112,20 @@ AWS Instance | GPU |GPU Memory|Max Inference size (#params)| Max training size (
 | p4de.24xlarge  | 8 A100  | 640GB      | 32B                         | 5B                          |
 
 The instruction tuned, teaches the model to behave more like a chatbot, better user interface for model generation. For example, turned GPT-3 into ChatGPT, increase AI adoption, from thousandss of reseachers to millions of people.
+
+
+
+[For more information ](./2_Training/README.md)
+
+## Evaluation
+There are several ways to evaluate the results of training, but it requires having good test data that is of high quality, accurate, and generalized, not seen in the training data. Currently, there is an Elo comparison. LLM benchmarks like ARC (a set of grade-school questions) and HellaSwag - MMLU (multitask metrics covering elementary math, US history, computer science, law, and more) can be used. TrufulQA is another benchmark.
+
+## Error Analysis
+Error analysis involves understanding the behavior of the base model before fine-tuning. Categorize errors and iterate on data to fix these problems in the data space.
+
+[For more information ](./3_Evaluation/README.md)
+
+
 
 
 ## PEFT  Parameter-Efficient Finetuning
