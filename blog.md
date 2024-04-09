@@ -359,21 +359,7 @@ Training an LLM is similar to training a neural network. The process involves:
 - Updating weights
 - Hyperparameters (Learning Rate, Learning Rate Scheduler)
 
-## Training Infrastructure
-For real training, we need to consider the amount of parameters required to train. Here is a table showing the AWS Instance, GPU, GPU Memory, Max Inference size (#params), and Max training size (#tokens):
 
-AWS Instance | GPU |GPU Memory|Max Inference size (#params)| Max training size (#tokens)
-
-| AWS Instance   | GPU     | GPU Memory | Max Inference size (#params) | Max training size (#tokens) |
-|----------------|---------|------------|-----------------------------|-----------------------------|
-| p3.2xlarge     | 1 V100  | 16GB       | 7B                          | 1B                          |
-| p3.8xlarge     | 4 V100  | 64GB       | 7B                          | 1B                          |
-| p3.16xlarge    | 8 V100  | 128GB      | 7B                          | 1B                          |
-| p3dn.24xlarge  | 8 V100  | 256GB      | 14B                         | 2B                          |
-| p4d.24xlarge   | 8 A100  | 320GB      | 18B                         | 2.5B                        |
-| p4de.24xlarge  | 8 A100  | 640GB      | 32B                         | 5B                          |
-
-The instruction tuned, teaches the model to behave more like a chatbot, better user interface for model generation. For example, turned GPT-3 into ChatGPT, increase AI adoption, from thousandss of reseachers to millions of people.
 ## Training Method
 
 
@@ -1514,7 +1500,21 @@ The answer is</td>
   </tbody>
 </table>
 
+## Training Infrastructure
+For real training, we need to consider the amount of parameters required to train. Here is a table showing the AWS Instance, GPU, GPU Memory, Max Inference size (#params), and Max training size (#tokens):
 
+AWS Instance | GPU |GPU Memory|Max Inference size (#params)| Max training size (#tokens)
+
+| AWS Instance   | GPU     | GPU Memory | Max Inference size (#params) | Max training size (#tokens) |
+|----------------|---------|------------|-----------------------------|-----------------------------|
+| p3.2xlarge     | 1 V100  | 16GB       | 7B                          | 1B                          |
+| p3.8xlarge     | 4 V100  | 64GB       | 7B                          | 1B                          |
+| p3.16xlarge    | 8 V100  | 128GB      | 7B                          | 1B                          |
+| p3dn.24xlarge  | 8 V100  | 256GB      | 14B                         | 2B                          |
+| p4d.24xlarge   | 8 A100  | 320GB      | 18B                         | 2.5B                        |
+| p4de.24xlarge  | 8 A100  | 640GB      | 32B                         | 5B                          |
+
+The instruction tuned, teaches the model to behave more like a chatbot, better user interface for model generation. For example, turned GPT-3 into ChatGPT, increase AI adoption, from thousandss of reseachers to millions of people.
   
 ## Evaluation
 There are several ways to evaluate the results of training, but it requires having good test data that is of high quality, accurate, and generalized, not seen in the training data. Currently, there is an Elo comparison. LLM benchmarks like ARC (a set of grade-school questions) and HellaSwag - MMLU (multitask metrics covering elementary math, US history, computer science, law, and more) can be used. TrufulQA is another benchmark.
