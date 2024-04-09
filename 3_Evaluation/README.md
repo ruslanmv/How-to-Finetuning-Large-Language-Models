@@ -35,7 +35,11 @@ Evaluation is essential for assessing the effectiveness of your fine-tuned LLM. 
 
 - ROUGE-1 (Unigrams): This focuses on how many single words match between the predicted and ground truth answer.
 - ROUGE-2 (Bigrams): This focuses on how many 2-word sequences match between the predicted and ground truth answer.
-- Higher ROUGE scores indicate better agreement in terms of n-grams between the predicted answer and the ground truth answer. 
+- Higher ROUGE scores indicate better agreement in terms of n-grams between the predicted answer and the ground truth answer.
+
+**Cosine similarity** is a metric used to measure the similarity between two vectors in a multi-dimensional space. In the context of text comparison, it can be particularly useful for tasks such as document retrieval, information retrieval, and recommendation systems. The concept behind cosine similarity is to represent text documents as numerical vectors, where each dimension corresponds to a unique word, and the value along that dimension represents the frequency or importance of the word in the document. By calculating the cosine similarity between these vectors, we can determine how similar or related two pieces of text are to each other. 
+
+
 
 **Evaluation Strategies:**
 
@@ -94,24 +98,25 @@ def exact_match(answer, predicted_answer):
   return 1.0 if answer.lower() == predicted_answer.lower() else 0.0
 
 
-def bleu_score(answer, predicted_answer):
-  """
-  This function calculates a BLEU score between the answer and predicted answer using the `nltk` library with smoothing.
+def bleu_score(answer, predicted_answer, n=2):
+    """
+    This function calculates a BLEU score between the answer and predicted answer using the `nltk` library with smoothing.
 
-  Args:
-      answer: The ground truth answer (string).
-      predicted_answer: The predicted answer by the LLM (string).
+    Args:
+        answer: The ground truth answer (string).
+        predicted_answer: The predicted answer by the LLM (string).
+        n: The n-gram order (default is 2 for bigrams).
 
-  Returns:
-      A float value representing the BLEU score (higher is better).
+    Returns:
+        A float value representing the BLEU score (higher is better).
 
-  **Requires `nltk` library to be installed (`pip install nltk`).**
-  """
-  from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
-  reference = [answer.split()]
-  candidate = predicted_answer.split()
-  smooth = SmoothingFunction()  # Create a SmoothingFunction object
-  return sentence_bleu(reference, candidate, smoothing_function=smooth.method0)  # Use method0 from SmoothingFunction
+    **Requires `nltk` library to be installed (`pip install nltk`).**
+    """
+    from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+    reference = [answer.split()]
+    candidate = predicted_answer.split()
+    smooth = SmoothingFunction()  # Create a SmoothingFunction object
+    return sentence_bleu(reference, candidate, smoothing_function=smooth.method1, weights=(1/n,)*n)
 
 
 
@@ -168,6 +173,46 @@ def f1_score(answer, predicted_answer):
     f1_score = 2 * (precision * recall) / (precision + recall)
     
     return f1_score
+
+from collections import Counter
+import math
+
+def cosine_similarity(str1, str2):
+    """
+    Computes the cosine similarity between two strings using the Bag-of-Words model.
+
+    Args:
+        str1: The first string.
+        str2: The second string.
+
+    Returns:
+        A float representing the cosine similarity between the two strings.
+    """
+    # Tokenize the strings
+    tokens1 = str1.split()
+    tokens2 = str2.split()
+
+    # Create bag of words for each string
+    bow1 = Counter(tokens1)
+    bow2 = Counter(tokens2)
+
+    # Get the set of all unique words
+    all_words = set(bow1.keys()).union(set(bow2.keys()))
+
+    # Compute dot product
+    dot_product = sum(bow1[word] * bow2[word] for word in all_words)
+
+    # Compute magnitudes
+    magnitude1 = math.sqrt(sum(bow1[word] ** 2 for word in all_words))
+    magnitude2 = math.sqrt(sum(bow2[word] ** 2 for word in all_words))
+
+    # Compute cosine similarity
+    if magnitude1 == 0 or magnitude2 == 0:
+        return 0
+    else:
+        return dot_product / (magnitude1 * magnitude2)
+
+
 # Sample question and answer from evaluation dataset
 test_question = "What is the capital of France?"
 answer = "Paris"
@@ -187,7 +232,7 @@ print("ROUGE-1 Score:", rouge_n(answer, predicted_answer, 1))
 print("ROUGE-2 Score:", rouge_n(answer, predicted_answer, 2))
 print("F1 Score:", f1_score(answer, predicted_answer))
 print("Exact Match Ratio:", exact_match(answer, predicted_answer))
-
+print("Cosine Similarity:", cosine_similarity(answer, predicted_answer))
 
 ```
 
