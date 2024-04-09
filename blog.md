@@ -98,7 +98,11 @@ This notebook collect the three passages needed
 2. Traning
 3. Evaluation
 
-## 1. Data Preparation
+## 1. Data Preparation for Fine-Tuning Large Language Models
+
+Large language models (LLMs) are trained on massive amounts of text data to understand and generate human-like language. Fine-tuning takes a pre-trained LLM and tailors it for a specific task using a smaller dataset relevant to that task. This section dives into data preparation, a crucial step for successful fine-tuning.
+
+
 ### First-time Fine-tuning
 To start fine-tuning, we need to identify the tasks by bottom-up engineering of a large LLM. Find tasks that the LLM is doing okay at. Pick one task and gather around 1500 inputs and outputs for that task. Then, fine-tune a small LLM on this data.
 
@@ -192,6 +196,12 @@ df.head()
 Instruction tuning teaches the model to behave more like a chatbot, providing a better user interface for model generation. For example, it turned GPT-3 into ChatGPT, increasing AI adoption from thousands of researchers to millions of people. You can use instruction-following datasets, such as FAWS, customer support conversations, slack messages, etc. If you don't have QA data, you can convert it to QA by using a prompt template or another LLM. The standard cycle of fine-tuning consists of Data Preparation, Training, and Evaluation.
 
 
+**3. Formatting Your Fine-tuning Data**
+
+There are various ways to format your data for fine-tuning. Here, the code demonstrates extracting questions and answers from a JSONL file and combining them into a single text format.
+
+
+
 ```python
 ### Various ways of formatting your data
 
@@ -218,6 +228,9 @@ elif "input" in examples and "output" in examples:
 else:
   text = examples["text"][0]
 ```
+**4. Creating Prompts**
+
+Prompts provide context and guide the LLM towards the desired task. The code showcases creating prompts for question-answering tasks with placeholders for questions and answers.
 
 
 ```python
@@ -249,7 +262,9 @@ prompt_template_q = """### Question:
 {question}
 ### Answer:"""
 ```
+**5. Saving Your Data**
 
+The code demonstrates saving the processed data with questions and answers in JSONL format for compatibility with various tools.
 
 ```python
 num_examples = len(examples["question"])
@@ -333,6 +348,10 @@ print(finetuning_dataset)
     })
     
 ## Training
+
+Large language models (LLMs) are powerhouses of general language understanding, trained on massive text datasets. Fine-tuning takes a pre-trained LLM and tailors it for a specific task using a smaller, relevant dataset. This section delves into the training aspect of fine-tuning.
+
+
 Training an LLM is similar to training a neural network. The process involves:
 - Adding the training data
 - Calculating loss
@@ -355,6 +374,21 @@ AWS Instance | GPU |GPU Memory|Max Inference size (#params)| Max training size (
 | p4de.24xlarge  | 8 A100  | 640GB      | 32B                         | 5B                          |
 
 The instruction tuned, teaches the model to behave more like a chatbot, better user interface for model generation. For example, turned GPT-3 into ChatGPT, increase AI adoption, from thousandss of reseachers to millions of people.
+## Training Method
+
+
+1. **Load the Base Model:** First we load the pre-trained LLM (`EleutherAI/pythia-70m` in this case).
+2. **Define Training Configuration:** This sets up details like the pre-trained model name, maximum sequence length, and dataset path.
+3. **Tokenize and Split Data:** The data is converted into numerical tokens the model understands and split into training and testing sets.
+4. **Define Training Arguments:** These hyperparameters control the training process, including learning rate, number of epochs, and batch size.
+5. **Print Model Details:** This displays information about the model's architecture and memory/compute requirements.
+6. **Initialize Trainer Object:** The `Trainer` object from `transformers` simplifies the training process.
+7. **Train the Model:** The `trainer.train()` method carries out the fine-tuning process on the specified data.
+8. **Save the Fine-tuned Model:** The trained model is saved for later use.
+
+**Note:** This is a simplified example. 
+
+
 
 
 ```python
@@ -403,6 +437,11 @@ use_hf = False
 ```
 
 ### Set up the model, training config, and tokenizer
+
+Fine-tuning involves training the pre-trained LLM on your task-specific dataset. This helps the model adjust its internal parameters and representations to excel at your chosen task.
+
+Here's the Python code showcasing the training process:
+
 
 
 ```python
