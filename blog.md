@@ -92,7 +92,7 @@ pip install accelerate -U
 
 
 # Fine-tune Large Language Models
-In this notebook we are going to fine tune a simple Large Model to create a custom doctor chatbot assitant.
+ We are going to fine tune a simple Large Model to create a custom doctor chatbot assitant.
 This notebook collect the three passages needed
 1. Data Preparation
 2. Traning
