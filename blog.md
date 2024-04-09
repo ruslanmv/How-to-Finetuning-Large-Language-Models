@@ -73,12 +73,6 @@ pip install accelerate -U
 ```
 
 
-
-
-
-
-
-
 ## Why Fine-tune All the Parameters?
 - LORA (Low Rank Adaptation of LLMs)
   - Fewer trainable parameters for GPT3 (1000x less)
@@ -198,12 +192,7 @@ text = examples["question"][0] + examples["answer"][0]
 text
 ```
 
-
-
-
     'What does abutment of the nerve root mean?Hi. I have gone through your query with diligence and would like you to know that I am here to help you. For further information consult a neurologist online -->'
-
-
 
 
 ```python
@@ -236,8 +225,6 @@ answer = examples["answer"][0]
 text_with_prompt_template = prompt_template_qa.format(question=question, answer=answer)
 text_with_prompt_template
 ```
-
-
 
 
     '### Question:\nWhat does abutment of the nerve root mean?\n### Answer:\nHi. I have gone through your query with diligence and would like you to know that I am here to help you. For further information consult a neurologist online -->'
@@ -362,9 +349,6 @@ Training an LLM is similar to training a neural network. The process involves:
 
 **Note:** This is a simplified example. 
 
-
-
-
 ```python
 import datasets
 import tempfile
@@ -465,8 +449,6 @@ else:
     logger.debug("Select CPU device")
     device = torch.device("cpu")
 ```
-
- 
 
 
 ```python
@@ -698,9 +680,6 @@ class MetricsCollector(TrainerCallback):
     self.metrics.append(logs)
 
 
-
-
-
 import matplotlib.pyplot as plt
 
 def plot_loss(metrics):
@@ -744,18 +723,14 @@ def plot_learning_rate(metrics):
   plt.show()
 ```
 
-
 ```python
 metrics_collector = MetricsCollector()
 trainer.add_callback(metrics_collector)
 ```
 
-
 ```python
 training_output = trainer.train()
 ```
-
-
 
 ```python
 plot_loss(metrics_collector.metrics)
@@ -835,15 +810,10 @@ finetuned_slightly_model = AutoModelForCausalLM.from_pretrained(save_dir, local_
 
 ```
 
-
 ```python
 finetuned_slightly_model.to(device) 
 
 ```
-
-
-
-
 
 ### Run slightly trained model
 
@@ -873,11 +843,6 @@ print("Target answer output (test):", test_answer)
     Target answer output (test): Hello. I just read your query. See Kalarachi Kai choornam is helpful in amenorrhea. As far as small cysts are concerned they are unmatured eggs which failed to induce menstrual cycle previously, as a result, they got collected in the ovary and they will remain in the ovary. Now, you have got your periods you can start trying for conception. But I advise you to do it under the supervision of a nearby gynecologist because egg size is important while conception and that you can know by ovulation study. Ovulation study is performed under the supervision of a gynecologist. For gall stones, surgical intervention is required generally. Medicine is not of much help.
     
 
-
-
-
-
-
 ### Explore moderation using small model
 First, try the non-finetuned base model:
 
@@ -888,7 +853,6 @@ base_model = AutoModelForCausalLM.from_pretrained("EleutherAI/pythia-70m")
 print(inference_new("What do you think of Mars?", base_model, base_tokenizer))
 ```
 
-    
     
     I think I’m going to go to the next page.
     
@@ -912,12 +876,9 @@ print(inference_new("What do you think of Mars?", base_model, base_tokenizer))
 #print(inference_new("What do you think of Mars?", finetuned_longer_model, tokenizer))
 print(inference_new("What do you think of Mars?", finetuned_slightly_model, tokenizer))
 ```
-
     
     I’m not sure if you are a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be a good enough person to be
     
-
-
 ```python
 ## Comparison 
 ```
@@ -931,18 +892,9 @@ test_questions = [test_dataset[i]['question'] for i in range(len(test_dataset))]
 
 ```
 
-
 ```python
 len(test_questions[:10])
 ```
-
-
-
-
-    10
-
-
-
 
 ```python
 
