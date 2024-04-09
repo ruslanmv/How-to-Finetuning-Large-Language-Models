@@ -1519,6 +1519,60 @@ The instruction tuned, teaches the model to behave more like a chatbot, better u
 ## Evaluation
 There are several ways to evaluate the results of training, but it requires having good test data that is of high quality, accurate, and generalized, not seen in the training data. Currently, there is an Elo comparison. LLM benchmarks like ARC (a set of grade-school questions) and HellaSwag - MMLU (multitask metrics covering elementary math, US history, computer science, law, and more) can be used. TrufulQA is another benchmark.
 
+**Evaluation: A Crucial Step**
+
+Evaluation is essential for assessing the effectiveness of your fine-tuned LLM. Here's a breakdown of key aspects:
+
+**Metrics:**
+
+- **Exact Match (EM):** Compares predicted answers to ground-truth answers on a word-by-word basis, indicating perfect accuracy.
+- **F1-Score:** A harmonic mean of precision (proportion of correct answers) and recall (proportion of ground-truth answers retrieved).
+- **BLEU Score (for text generation):** Measures the similarity between generated text and reference text, considering n-gram matches.
+
+**Evaluation Strategies:**
+
+- **Held-out Test Set:** Split your dataset into training, validation, and testing sets. Evaluate on the unseen testing set to gauge generalizability.
+- **Cross-validation:** Divide your data into folds and train on k-1 folds, evaluating on the remaining fold. Repeat for all folds for a more robust estimate.
+
+**Code Example:**
+
+```python
+import datasets
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# Load fine-tuned model and tokenizer
+model_name = "your_fine-tuned_model_name"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# Sample question and answer from evaluation dataset
+test_question = "What is the capital of France?"
+answer = "Paris"
+
+# Generate predicted answer
+def inference(question, model, tokenizer):
+    # ... (implementation similar to provided code)
+
+predicted_answer = inference(test_question, model, tokenizer)
+
+# Calculate exact match (replace with other metrics if needed)
+exact_match = int(predicted_answer.strip() == answer.strip())
+
+print(f"Test Question: {test_question}")
+print(f"Predicted Answer: {predicted_answer}")
+print(f"Ground-Truth Answer: {answer}")
+print(f"Exact Match: {exact_match}")
+```
+
+**Beyond the Basics:**
+
+- **Error Analysis:** Identify patterns in incorrect predictions to refine your fine-tuning process or data collection.
+- **Human Evaluation:** Supplement quantitative metrics with human judgment for tasks where subjectivity or nuance is important.
+- **Bias Detection and Mitigation:** Be vigilant of potential biases inherited from training data and fine-tuning settings. Implement strategies like debiasing techniques to address them.
+
+By following these guidelines and continually evaluating your fine-tuned LLMs, you can ensure they excel at the specific tasks you intend them for, ultimately enhancing the value they deliver in your applications.
+
+
 ## Error Analysis
 Error analysis involves understanding the behavior of the base model before fine-tuning. Categorize errors and iterate on data to fix these problems in the data space.
 
