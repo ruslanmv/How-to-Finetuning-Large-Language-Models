@@ -450,20 +450,6 @@ training_config = {
 ```
 
 
-```python
-training_config
-```
-
-
-
-
-    {'model': {'pretrained_name': 'EleutherAI/pythia-70m', 'max_length': 2048},
-     'datasets': {'use_hf': False,
-      'path': 'c:\\Blog\\How-to-Finetuning-Large-Language-Models\\content\\ai-medical-chatbot_processed.jsonl'},
-     'verbose': True}
-
-
-
 
 ```python
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -492,46 +478,12 @@ else:
     device = torch.device("cpu")
 ```
 
-    2024-04-07 23:46:48,431 - DEBUG - __main__ - Select CPU device
-    
+ 
 
 
 ```python
 base_model.to(device)
 ```
-
-
-
-
-    GPTNeoXForCausalLM(
-      (gpt_neox): GPTNeoXModel(
-        (embed_in): Embedding(50304, 512)
-        (emb_dropout): Dropout(p=0.0, inplace=False)
-        (layers): ModuleList(
-          (0-5): 6 x GPTNeoXLayer(
-            (input_layernorm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-            (post_attention_layernorm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-            (post_attention_dropout): Dropout(p=0.0, inplace=False)
-            (post_mlp_dropout): Dropout(p=0.0, inplace=False)
-            (attention): GPTNeoXAttention(
-              (rotary_emb): GPTNeoXRotaryEmbedding()
-              (query_key_value): Linear(in_features=512, out_features=1536, bias=True)
-              (dense): Linear(in_features=512, out_features=512, bias=True)
-              (attention_dropout): Dropout(p=0.0, inplace=False)
-            )
-            (mlp): GPTNeoXMLP(
-              (dense_h_to_4h): Linear(in_features=512, out_features=2048, bias=True)
-              (dense_4h_to_h): Linear(in_features=2048, out_features=512, bias=True)
-              (act): GELUActivation()
-            )
-          )
-        )
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (embed_out): Linear(in_features=512, out_features=50304, bias=False)
-    )
-
-
 
 ### Define function to carry out inference
 
