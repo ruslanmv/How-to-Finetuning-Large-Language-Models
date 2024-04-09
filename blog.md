@@ -141,19 +141,7 @@ df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -488,92 +476,6 @@ base_model.to(device)
 ### Define function to carry out inference
 
 
-```python
-def inference(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=100):
-  # Tokenize
-  input_ids = tokenizer.encode(
-          text,
-          return_tensors="pt",
-          truncation=True,
-          max_length=max_input_tokens
-  )
-
-  # Generate
-  device = model.device
-  generated_tokens_with_prompt = model.generate(
-    input_ids=input_ids.to(device),
-    max_length=max_output_tokens
-  )
-
-  # Decode
-  generated_text_with_prompt = tokenizer.batch_decode(generated_tokens_with_prompt, skip_special_tokens=True)
-
-  # Strip the prompt
-  generated_text_answer = generated_text_with_prompt[0][len(text):]
-
-  return generated_text_answer
-```
-
-However the previos inference function doesn't explicitly set the attention_mask and pad_token_id arguments in the model.generate call. These are crucial for the model to understand how to process the input and generate a proper response.
-
-Here's how to fix the issue:
-
-Setting pad_token_id:
-
-Access the eos_token_id (end-of-sentence token) from your tokenizer. This value usually indicates the pad token for the model.
-
-In the model.generate call, add the argument pad_token_id=tokenizer.eos_token_id. This tells the model which token represents padding.
-Setting attention_mask:
-
-The attention_mask informs the model which parts of the input sequence to focus on during generation. It's a binary mask where 1 indicates a valid token and 0 indicates padding.
-For your code, you can create the attention_mask directly:
-
-```Python
-attention_mask = torch.ones_like(input_ids)  # Create mask with all 1s
-attention_mask[input_ids[:, 1:] == tokenizer.pad_token_id] = 0  # Set padding to 0
-```
-
-This code snippet creates a mask with all 1s (meaning all tokens are considered) and then sets the mask elements corresponding to padding tokens (identified by tokenizer.pad_token_id) to 0 (ignored by the model).
-
-
-```python
-def inference_attempt(text, model, tokenizer, max_input_tokens=1000, max_output_tokens=100):
-  # Tokenize
-  input_ids = tokenizer.encode(
-      text,
-      return_tensors="pt",
-      truncation=True,
-      max_length=max_input_tokens
-  )
-
-  # Generate
-  device = model.device
-  attention_mask = torch.ones_like(input_ids)  # Create mask with all 1s
-  attention_mask[input_ids[:, 1:] == tokenizer.pad_token_id] = 0  # Set padding to 0
-  generated_tokens_with_prompt = model.generate(
-      input_ids.to(device),
-      max_length=max_output_tokens,
-      attention_mask=attention_mask,
-      pad_token_id=tokenizer.eos_token_id  # Set pad token
-  )
-
-  # Decode
-  generated_text_with_prompt = tokenizer.batch_decode(generated_tokens_with_prompt, skip_special_tokens=True)
-
-  # Strip the prompt
-  generated_text_answer = generated_text_with_prompt[0][len(text):]
-  return generated_text_answer
-```
-
-However there are stills some points to consider
-
-- Masking Purpose: The attention mask indicates which input tokens should be attended to during generation. Masking padding tokens ensure they don't influence the model's attention.
-
-- Crucial First Element: The CLS token (index 0) is essential for tasks like question-answering, so it must be included in the masking.
-
-
-- Clearer Slicing: While [:, 1:] would work if corrected to include the first element, using `input_ids == tokenizer.pad_token_id` is more explicit and less prone to errors.
-Consider torch.where: For more complex masking scenarios, explore torch.where for conditional assignments.
 
 
 ```python
@@ -840,10 +742,6 @@ def plot_learning_rate(metrics):
   plt.ylabel('Learning Rate')
   plt.title('Learning Rate')
   plt.show()
-
-
-
-
 ```
 
 
@@ -1096,7 +994,7 @@ style_df = style_df.set_properties(**{"vertical-align": "text-top"})
 style_df
 ```
 
-
+![](assets/2024-04-09-11-35-03.png)
 
 
 
