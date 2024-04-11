@@ -233,9 +233,7 @@ text_with_prompt_template
 
 
 ```python
-prompt_template_q = """### Question:
-{question}
-### Answer:"""
+prompt_template_q = """{question}"""
 ```
 **5. Saving Your Data**
 
